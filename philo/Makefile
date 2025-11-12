@@ -3,22 +3,22 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror -Iinclude -pthread
 SRC = src/threads.c
 OBJ = $(SRC:.c=.o)
-TARGET = threads.c \
+NAME = philo
 
 # Regras
-all: $(TARGET)
+all: $(NAME)
 
-$(TARGET): $(OBJ)
+$(NAME): $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $^
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJ) $(TARGET)
+	rm -f $(OBJ) $(NAME)
 
 fclean: clean
-	rm -f $(TARGET)
+	rm -f $(NAME)
 
 re: fclean all
 
