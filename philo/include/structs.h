@@ -21,6 +21,7 @@ typedef struct s_thread_info
     int     mutex1_id;
     int     mutex2_id;
     int     status;
+    int     n_forks;
 }   thread_info_t;
 
 #endif
