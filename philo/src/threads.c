@@ -1,76 +1,91 @@
 #include "../include/structs.h"
 #include "../include/philo.h"
 
-static void    *eating_spaggetti(void *args)
+long long   current_miliseconsds(void)
 {
-    thread_info_t   *thread_info;
-    int i;
-
-    i = 1;
-    thread_info = (thread_info_t *)args;
-    while (1)
-    {
-        if (thread_info->mutex[i].locked_status == true)
-            i++;
-        else
-        {
-            pthread_mutex_lock(&thread_info->mutex[i].m);
-            thread_info->status = WAITING_1;
-            thread_info->mutex[i].owner = thread_info->th;
-            thread_info->mutex[i].locked_status = true;
-            printf("thread: %p bloqueou mutex: %p locked_status: %d\n", (void *)thread_info->th, (void *)&thread_info->mutex[i].m, (int)thread_info->mutex[i].locked_status);
-            i++;
-            if (thread_info->mutex[i].locked_status == true)
-                return NULL;
-            else if (thread_info->mutex[i].locked_status == false)
-            {
-                pthread_mutex_lock(&thread_info->mutex[i].m);
-                thread_info->status = RUNNING;
-                thread_info->mutex[i].owner = thread_info->th;
-                thread_info->mutex[i].locked_status = true;
-                printf("thread: %p bloqueou mutex: %p locked_status: %d\n", (void *)thread_info->th, (void *)&thread_info->mutex[i].m, (int)thread_info->mutex[i].locked_status);
-                return NULL;
-            }
-        }
-        i++;
-    }
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 }
 
-static thread_info_t    starter_args(mutex_tracker_t *mutex, pthread_t thread, thread_info_t *args, int i)
+static void    *pantry(void *args)
 {
-    args[i].mutex = mutex;
-    args[i].mutex1_id = -1;
-    args[i].mutex2_id = -1;
-    args[i].th = thread;
+    thread_info_t   *thread_info;
+    int first;
+    int second;
+
+    thread_info = (thread_info_t *)args;
+    first = thread_info->thread_id;
+    second = (thread_info->thread_id + 1) % thread_info->n_forks;
+    thread_info->start_time = current_miliseconsds();
+    while (thread_info->life_status == ALIVE)
+    {
+        if (thread_info->fork[first].locked_status == true)
+        {
+            usleep(thread_info->time_to_die * 1000);
+            if (thread_info->fork[first].locked_status == true)
+                thread_info->life_status = DEAD;
+        }
+        pthread_mutex_lock(&thread_info->fork[first].m);
+        thread_info->fork[first].locked_status = true;
+        printf("mutex: %p bloquado pela thread: %d\n", (void *)&thread_info->fork[first].m, thread_info->thread_id);
+        if (thread_info->fork[second].locked_status == true)
+        {
+            usleep(thread_info->time_to_die * 1000);
+            if (thread_info->fork[second].locked_status == true)
+                thread_info->life_status = DEAD;
+        }
+        pthread_mutex_lock(&thread_info->fork[second].m);
+        thread_info->fork[second].locked_status = true;
+        printf("mutex: %p bloquado pela thread: %d\n", (void *)&thread_info->fork[second].m, thread_info->thread_id);
+        usleep(thread_info->fork[first].time_to_eat * 1000);
+        pthread_mutex_unlock(&thread_info->fork[first].m);
+        thread_info->fork[first].locked_status = false;
+        printf("mutex: %p desbloquado pela thread: %d\n", (void *)&thread_info->fork[first].m, thread_info->thread_id);
+        pthread_mutex_unlock(&thread_info->fork[second].m);
+        thread_info->fork[second].locked_status = true;
+        printf("mutex: %p desbloquado pela thread: %d\n", (void *)&thread_info->fork[second].m, thread_info->thread_id);
+    }
+    usleep(thread_info->sleep_time * 1000);
+    return NULL;
+}
+
+static void    starter_args(mutex_tracker_t *mutex, thread_info_t *args, int n_forks, int i)
+{
+    args[i].th = 0;
+    args[i].fork = mutex;
+    args[i].fork[i].locked_status = false;
     args[i].status = WAITING_0;
-    return (*args);
+    args[i].thread_id = i;
+    args[i].n_forks = n_forks;
+    args[i].life_status = ALIVE;
+    args[i].fork[i].locked_status = false;
+    args[i].fork[i].owner = 0;
+    args[i].fork[i].start_time = 0;
 }
 int     thread_creator(mutex_tracker_t *mutex, int n_forks)
 {
-    pthread_t *th;
     thread_info_t args[n_forks];
     int i;
 
     i = -1;
-    th = malloc(n_forks * sizeof(pthread_t));
-    if (!th)
-        return (0);
     while (++i < n_forks)
     {
         pthread_mutex_init(&mutex[i].m, NULL);
-        mutex[i].locked_status = false;
-        printf("mutex_criada: %p locked_status: %d\n", (void *)&mutex[i].m, (int)mutex[i].locked_status);
-        args[i] = starter_args(mutex, th[i] ,args, i);
+        printf("mutex criada: %p\n", (void *)&mutex[i].m);
+        starter_args(mutex, args, n_forks, i);
     }
     i = -1;
     while (++i < n_forks)
     {
-        if (pthread_create(&th[i], NULL, eating_spaggetti, &args[i]) != 0)
-            return (printf("Errso na criação de thread\n"), free(th), 0);
-        printf("thread_criada: %p\n", (void *)th[i]);
+        if (pthread_create(&args[i].th, NULL, pantry, &args[i]) != 0)
+            printf("ERROR grabbing fork\n");
+        printf("thread criada: %d\n", args[i].thread_id);
+        usleep(10000);
     }
-    th[i] = '\0';
-    free(th);
+    i = -1;
+    while (++i < n_forks)
+        pthread_join(args[i].th, NULL);
     return (0);
 }
 
@@ -106,17 +121,21 @@ static long long	ft_atol(char *str)
 int     main(int argc, char *argv[])
 {
     mutex_tracker_t *mutex;
-   // thread_info_t *threads;
-    long long n_forks;
+    thread_info_t   thread_info;
+    long long   n_forks;
 
-    if (argc != 5)
-    return (0);
     n_forks = ft_atol(argv[1]);
     mutex = malloc(n_forks * sizeof(mutex_tracker_t));
-    /* threads = malloc(n_forks * sizeof(thread_info_t));
-    if (!mutex || !threads)
-        return (0); */
+    if (!mutex)
+        return (0);
+    memset(&thread_info, 0, sizeof(thread_info));
+    thread_info.time_to_die = ft_atol(argv[2]);
+    mutex->time_to_eat = ft_atol(argv[3]);
+    thread_info.sleep_time = ft_atol(argv[4]);
+    if (argc == 6)
+        thread_info.number_of_times_to_eat = ft_atol(argv[5]);
+    else
+        thread_info.number_of_times_to_eat = -1;
     thread_creator(mutex, (int)n_forks);
     free(mutex);
-    //free(threads);
 }
