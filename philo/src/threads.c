@@ -20,21 +20,21 @@ static void    *pantry(void *args)
     thread_info->start_time = current_miliseconsds();
     while (thread_info->life_status == ALIVE)
     {
-        if (thread_info->fork[first].locked_status == true)
+/*         if (thread_info->fork[first].locked_status == true)
         {
             usleep(thread_info->time_to_die * 1000);
             if (thread_info->fork[first].locked_status == true)
                 thread_info->life_status = DEAD;
-        }
+        } */
         pthread_mutex_lock(&thread_info->fork[first].m);
         thread_info->fork[first].locked_status = true;
         printf("mutex: %p bloquado pela thread: %d\n", (void *)&thread_info->fork[first].m, thread_info->thread_id);
-        if (thread_info->fork[second].locked_status == true)
+/*         if (thread_info->fork[second].locked_status == true)
         {
             usleep(thread_info->time_to_die * 1000);
             if (thread_info->fork[second].locked_status == true)
                 thread_info->life_status = DEAD;
-        }
+        } */
         pthread_mutex_lock(&thread_info->fork[second].m);
         thread_info->fork[second].locked_status = true;
         printf("mutex: %p bloquado pela thread: %d\n", (void *)&thread_info->fork[second].m, thread_info->thread_id);
