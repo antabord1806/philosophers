@@ -1,5 +1,5 @@
 
-CC = gcc
+CC = cc
 CFLAGS = -Wall -Wextra -Werror -Iinclude -pthread
 SRC = src/threads.c
 OBJ = $(SRC:.c=.o)

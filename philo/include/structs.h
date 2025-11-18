@@ -15,28 +15,29 @@ typedef struct s_mutexes
     pthread_mutex_t m;
     pthread_t owner;
     bool locked_status;
-    long long start_time;
-    long long time_to_eat;
 }   mutex_tracker_t;
 
-
-typedef struct s_forks
+typedef struct s_time
 {
-    int     fork_id;
-}   t_forks;
+    long long   start_time;
+    long long   time_to_eat;
+    long long   end_time;
+    long long   time_to_die;
+    long long   sleep_time;
+    long long   n_times;
+    long long   wait_time;
+}   philo_time_t;
 typedef struct s_thread_info
 {
     pthread_t   th;
     mutex_tracker_t *fork;
+    philo_time_t  *time;
     int     status;
     int     thread_id;
     int     n_forks;
     bool    life_status;
-    long long   start_time;
-    long long   time_to_die;
-    long long   sleep_time;
-    long long   number_of_times_to_eat;
-    long long   wait_time;
 }   thread_info_t;
+
+
 
 #endif
