@@ -31,6 +31,8 @@ typedef struct s_thread_info
 {
     pthread_t   th;
     mutex_tracker_t *fork;
+    pthread_mutex_t *print_mutex;
+    pthread_mutex_t *time_mutex;
     philo_time_t  *time;
     int     status;
     int     thread_id;
@@ -38,6 +40,13 @@ typedef struct s_thread_info
     bool    life_status;
 }   thread_info_t;
 
-
+typedef struct s_helper_struct
+{
+    mutex_tracker_t     *mutex;
+    pthread_mutex_t print_mutex;
+    pthread_mutex_t time_mutex;
+    philo_time_t    *time;
+    int n_forks;
+}   helper_struct_t;
 
 #endif
