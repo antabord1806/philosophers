@@ -17,9 +17,12 @@ typedef struct s_mutexes
     bool locked_status;
 }   mutex_tracker_t;
 
+typedef struct s_monitor
+{
+    philo_info_t *ti;
+}
 typedef struct s_time
 {
-    long long   start_time;
     long long   time_to_eat;
     long long   end_time;
     long long   time_to_die;
@@ -27,21 +30,21 @@ typedef struct s_time
     long long   n_times;
     long long   wait_time;
 }   philo_time_t;
-typedef struct s_thread_info
+typedef struct s_philo_info
 {
     pthread_t   th;
     mutex_tracker_t *fork;
     pthread_mutex_t *print_mutex;
     pthread_mutex_t *time_mutex;
     philo_time_t  *time;
-    int     status;
     int     thread_id;
     int     n_forks;
-    bool    life_status;
-}   thread_info_t;
+    long long last_meal_ms;
+}   philo_info_t;
 
 typedef struct s_helper_struct
 {
+    pthread_t   monitor;
     mutex_tracker_t     *mutex;
     pthread_mutex_t print_mutex;
     pthread_mutex_t time_mutex;
