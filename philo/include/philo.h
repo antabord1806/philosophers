@@ -9,6 +9,7 @@
 #include <sys/time.h>
 #include <string.h>
 
-
+void    monitor_create(philo_info_t *ti);
+long long   current_miliseconsds(void);
 
 #endif
