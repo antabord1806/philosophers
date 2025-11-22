@@ -1,7 +1,7 @@
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -Iinclude -pthread
-SRC = src/threads.c
+CFLAGS = -Wall -Wextra -Werror -pthread
+SRC = src/threads.c src/monitor.c
 OBJ = $(SRC:.c=.o)
 NAME = philo
 
@@ -20,7 +20,7 @@ clean:
 fclean: clean
 	rm -f $(NAME)
 
-re: fclean all
+re: fclean all all
 
 .PHONY: all clean fclean re
 

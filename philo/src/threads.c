@@ -1,55 +1,60 @@
-#include "../include/structs.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   threads.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: antabord <antabord@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/22 12:22:18 by antabord          #+#    #+#             */
+/*   Updated: 2025/11/22 16:33:49 by antabord         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/philo.h"
 
-static void     sleeping_time(philo_info_t *pi, long long start, long long first, long long second)
+static void     sleeping_time(philo_info_t *pi)
 {
-    long long   timestamp;
+    long   timestamp;
 
     pthread_mutex_lock(pi->time_mutex);
-    timestamp = current_miliseconsds() - start;
+    timestamp = current_miliseconsds();
     pthread_mutex_unlock(pi->time_mutex);
-    pthread_mutex_lock(pi->print_mutex);
-    printf("%lld philo %d is sleeping\n", timestamp, pi->thread_id);
-    pthread_mutex_unlock(pi->print_mutex);
+    printf_msg(pi, "is sleeping");
     usleep(pi->sleep_time * 1000);
 }
 
-static void     eating_spaggeti(philo_info_t *pi, long long start, long long first, long long second)
+static void     eating_spaggeti(philo_info_t *pi, long start, long first, long second)
 {
-    long long timetstamp;
+    long timetstamp;
 
-    pthread_mutex_lock(&pi->fork[first]);
+    printf_msg(pi, "is thinking");
+    pthread_mutex_lock(&pi->fork[first].m);
     pthread_mutex_lock(pi->time_mutex);
-    timetstamp = current_miliseconsds() - start;
+    timetstamp = current_miliseconsds();
     pthread_mutex_unlock(pi->time_mutex);
-    pthread_mutex_lock(pi->print_mutex);
-    printf("%lld philo %d has taken a fork\n", timetstamp, pi->thread_id);
-    pthread_mutex_unlock(pi->print_mutex);
-    pthread_mutex_lock(&pi->fork[second]);
+    printf_msg(pi, "has taken a fork");
+    pthread_mutex_lock(&pi->fork[second].m);
     pthread_mutex_lock(pi->time_mutex);
-    timetstamp = current_miliseconsds() - start;
+    timetstamp = current_miliseconsds();
     pthread_mutex_unlock(pi->time_mutex);
-    pthread_mutex_lock(pi->print_mutex);
-    printf("%lld philo %d has taken a fork\n", timetstamp, pi->thread_id);
-    pthread_mutex_unlock(pi->print_mutex);
+    printf_msg(pi, "has taken a fork");
+    printf_msg(pi, "is eating");
     usleep(pi->time_to_eat * 1000);
     pthread_mutex_lock(pi->time_mutex);
     timetstamp = current_miliseconsds() - start;
     pi->last_meal_ms = timetstamp;
     pthread_mutex_unlock(pi->time_mutex);
-    pthread_mutex_lock(pi->print_mutex);
-    printf("%lld philo %d is eating\n", timetstamp, pi->thread_id);
-    pthread_mutex_unlock(pi->print_mutex);
+    pthread_mutex_unlock(&pi->fork[first].m);
+    pthread_mutex_unlock(&pi->fork[second].m);
     return ;
 }
 
-static void    pantry(void *args)
+static void    *pantry(void *args)
 {
     philo_info_t   *pi;
-    int first;
-    long long second;
-    long long start;
-    long long timetstamp;
+    long first;
+    long second;
+    long    tmp;
 
     pi = (philo_info_t *)args;
     first = pi->thread_id;
@@ -57,19 +62,23 @@ static void    pantry(void *args)
         second = (pi->thread_id + 1) % pi->n_forks;
     else 
         second = 0;
+    if (pi->thread_id % 2 == 1)
+    {
+        tmp = first;
+        first = second;
+        second = tmp;
+    }
     while (1)
     {
-        pthread_mutex_lock(pi->time_mutex);
-        start = current_miliseconsds();
-        pthread_mutex_unlock(pi->time_mutex);
-        eating_spaggeti(pi, start, first, second);
-        pthread_mutex_lock(pi->time_mutex);
-        timetstamp = current_miliseconsds() - start;
-        pthread_mutex_unlock(&pi->fork[first]);
-        pthread_mutex_unlock(&pi->fork[second]);
-        pthread_mutex_unlock(pi->time_mutex);
-        sleeping_time(pi, start, first, second);
+        eating_spaggeti(pi, pi->start_time, first, second);
+        sleeping_time(pi);
+        pthread_mutex_lock(pi->print_mutex);
+        if (pi->monitor->life_status == DEAD)
+            break;
+        pthread_mutex_unlock(pi->print_mutex);
     }
+    pthread_mutex_unlock(pi->print_mutex);
+    return NULL;
 }
 
 int     philo_creator(philo_info_t *ti)
@@ -80,26 +89,24 @@ int     philo_creator(philo_info_t *ti)
     while (++i < ti->n_forks)
     {
         pthread_mutex_init(&ti->fork[i].m, NULL);
-        printf("mutex criada: %p\n", (void *)&ti->fork[i].m);
+        //printf("mutex criada: %p\n", (void *)&ti->fork[i].m);
     }
     i = -1;
     while (++i < ti->n_forks)
     {
         if (pthread_create(&ti[i].th, NULL, pantry, &ti[i]) != 0)
             printf("ERROR grabbing fork\n");
-        printf("thread criada: %d\n", ti[i].thread_id);
+        usleep (5000);
+        //printf("thread criada: %d\n", ti[i].thread_id);
     }
-    i = -1;
-    while (++i < ti->n_forks)
-        pthread_join(ti[i].th, NULL);
     return (0);
 }
 
 
-static long long	ft_atol(char *str)
+static long	ft_atol(char *str)
 {
-    long long	result;
-    long long   total;
+    long	result;
+    long   total;
 	int		sign;
     
 	result = 0;
@@ -124,39 +131,54 @@ static long long	ft_atol(char *str)
         return (total);
 }
 
-void    struct_filler(philo_info_t *ti, fork_tracker_t *mutex, char *argv[])
+monitor_t    *struct_filler(philo_info_t *ti, fork_tracker_t *mutex, char *argv[], long n_forks)
 {
-    philo_time_t time;
     monitor_t   *monitor;
-    long long   n_forks;
-    int i;
+    long        i;
+    long        id;
 
-    i = 0;
-    while (++i < n_forks + 1)
+    monitor = malloc(sizeof(monitor_t));
+    if (!monitor)
+        return (NULL);
+    monitor->pi = ti;
+    monitor->n_forks = n_forks;
+    monitor->life_status = ALIVE;
+    monitor->last_meal_monitor = malloc(sizeof(pthread_mutex_t) * n_forks);
+    if (!monitor->last_meal_monitor
+        || pthread_mutex_init(&monitor->print_mutex, NULL)
+        || pthread_mutex_init(&monitor->time_mutex, NULL))
+        return (free(monitor->last_meal_monitor), free(monitor), NULL);
+    i = -1;
+    while (++i < n_forks)
+        pthread_mutex_init(&monitor->last_meal_monitor[i], NULL);
+    i = -1;
+    id = i + 1;
+    while (++i < n_forks)
     {
-        ti[i].th = 0;
         ti[i].monitor = monitor;
-        ti[i].monitor->n_forks = n_forks;
         ti[i].fork = mutex;
-        ti[i].print_mutex = 0;
-        ti[i].time_mutex = 0;
+        ti[i].print_mutex = &monitor->print_mutex;
+        ti[i].time_mutex = &monitor->time_mutex;
         ti[i].thread_id = i;
-        ti[i].n_forks = ft_atol(argv[1]);
+        ti[i].n_forks = (int)n_forks;
         ti[i].time_to_die = ft_atol(argv[2]);
         ti[i].time_to_eat = ft_atol(argv[3]);
         ti[i].sleep_time = ft_atol(argv[4]);
         ti[i].n_times = ft_atol(argv[5]);
+        ti[i].start_time = current_miliseconsds();
         ti[i].last_meal_ms = 0;
     }
+    return (monitor);
 }
 
 int     main(int argc, char *argv[])
 {
     fork_tracker_t *mutex;
     philo_info_t   *ti;
-    philo_time_t time;
-    long long   n_forks;
+    long   n_forks;
+    int     i;
     
+    i = -1;
     if (argc != 6)
         return (0);
     n_forks = ft_atol(argv[1]);
@@ -164,7 +186,14 @@ int     main(int argc, char *argv[])
     ti = malloc(n_forks * sizeof(philo_info_t));
     if (!ti || !mutex)
         return (0);
-    struct_filler(ti, mutex, argv);
-    monitor_create(ti);
+    memset(ti, 0, sizeof(philo_info_t) * n_forks);
+    memset(mutex, 0, sizeof(fork_tracker_t) * n_forks);
+    if (!struct_filler(ti, mutex, argv, n_forks))
+        return (free(mutex), free(ti), 0);
+    philo_creator(ti);
+    if (pthread_create(&ti->monitor->monitor, NULL, life_check, ti->monitor) != 0)
+        return (printf("failed to create monitor thread\n"), 0);
+    funeral(ti);
+    return (free(mutex), free(ti), 0);
 }
 
