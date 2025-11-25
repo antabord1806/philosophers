@@ -1,11 +1,10 @@
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -pthread
-SRC = src/threads.c src/monitor.c
+SRC = src/p_threads.c src/p_monitor.c src/p_routine.c
 OBJ = $(SRC:.c=.o)
 NAME = philo
 
-# Regras
 all: $(NAME)
 
 $(NAME): $(OBJ)
