@@ -1,9 +1,10 @@
 
-CC = cc
-CFLAGS = -Wall -Wextra -Werror -pthread
-SRC = src/p_threads.c src/p_monitor.c src/p_routine.c
+CC = cc 
+CFLAGS = -Wall -Wextra -Werror -pthread 
+SRC = src/p_threads.c src/p_monitor.c src/p_routine.c src/p_meal_check.c src/p_single_philo.c 
 OBJ = $(SRC:.c=.o)
 NAME = philo
+
 
 all: $(NAME)
 

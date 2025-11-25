@@ -11,6 +11,9 @@
 # define ALIVE 0 // alive
 # define DEAD 1  // dead
 
+# define HUNGRY 0 // alive
+# define FULL 1   // dead
+
 typedef struct s_forks		fork_tracker_t;
 typedef struct s_monitor	monitor_t;
 typedef struct s_philo_info	philo_info_t;
@@ -28,9 +31,12 @@ struct						s_monitor
 	philo_info_t			*pi;
 	pthread_mutex_t			print_mutex;
 	pthread_mutex_t			time_mutex;
-	pthread_mutex_t			*last_meal_monitor;
+	pthread_mutex_t			state_mutex;
+	pthread_mutex_t			last_meal_monitor;
 	long					n_forks;
+	int						finished_count;
 	bool					life_status;
+	bool					meal_status;
 };
 
 struct						s_philo_info
@@ -40,6 +46,8 @@ struct						s_philo_info
 	fork_tracker_t			*fork;
 	pthread_mutex_t			*print_mutex;
 	pthread_mutex_t			*time_mutex;
+	pthread_mutex_t			*state_mutex;
+	pthread_mutex_t			*last_meal_monitor;
 	int						thread_id;
 	int						n_forks;
 	long					time_to_eat;
@@ -50,6 +58,8 @@ struct						s_philo_info
 	long					wait_time;
 	long					start_time;
 	long					last_meal_ms;
+	int						amount_of_meals;
+	int						current_meal;
 };
 
 #endif
