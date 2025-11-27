@@ -5,7 +5,6 @@ SRC = src/p_threads.c src/p_monitor.c src/p_routine.c src/p_meal_check.c src/p_s
 OBJ = $(SRC:.c=.o)
 NAME = philo
 
-
 all: $(NAME)
 
 $(NAME): $(OBJ)

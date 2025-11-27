@@ -6,13 +6,13 @@
 /*   By: antabord <antabord@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 21:43:37 by antabord          #+#    #+#             */
-/*   Updated: 2025/11/25 21:43:39 by antabord         ###   ########.fr       */
+/*   Updated: 2025/11/27 18:16:58 by antabord         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-void	meal_check(monitor_t *mon, int i)
+void	meal_check(t_monitor *mon, int i)
 {
 	long	time_since_last_meal;
 
@@ -30,7 +30,7 @@ void	meal_check(monitor_t *mon, int i)
 		pthread_mutex_unlock(&mon->print_mutex);
 	}
 	pthread_mutex_lock(&mon->last_meal_monitor);
-	if (mon->pi[i].amount_of_meals == mon->pi->current_meal)
+	if (mon->pi[i].amount_of_meals == mon->pi[i].current_meal)
 	{
 		pthread_mutex_lock(&mon->state_mutex);
 		mon->meal_status = FULL;

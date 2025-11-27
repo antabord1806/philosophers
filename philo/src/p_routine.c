@@ -6,13 +6,13 @@
 /*   By: antabord <antabord@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 18:54:34 by antabord          #+#    #+#             */
-/*   Updated: 2025/11/25 21:17:22 by antabord         ###   ########.fr       */
+/*   Updated: 2025/11/27 19:08:27 by antabord         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-static void	sleeping_time(philo_info_t *pi)
+static void	sleeping_time(t_philo_info *pi)
 {
 	long	timestamp;
 
@@ -23,7 +23,7 @@ static void	sleeping_time(philo_info_t *pi)
 	usleep(pi->sleep_time * 1000);
 }
 
-static void	grabbing_forks(philo_info_t *pi, long first, long second)
+static void	grabbing_forks(t_philo_info *pi, long first, long second)
 {
 	long	timetstamp;
 
@@ -45,19 +45,19 @@ static void	grabbing_forks(philo_info_t *pi, long first, long second)
 	printf_msg(pi, timetstamp, "is eating");
 }
 
-static void	eating_spaggeti(philo_info_t *pi, long first, long second)
+static void	eating_spaggeti(t_philo_info *pi, long first, long second)
 {
 	grabbing_forks(pi, first, second);
-	usleep(pi->time_to_eat * 1000);
 	pthread_mutex_lock(pi->last_meal_monitor);
 	pi->last_meal_ms = current_miliseconsds();
 	pthread_mutex_unlock(pi->last_meal_monitor);
+	usleep(pi->time_to_eat * 1000);
 	pthread_mutex_unlock(&pi->fork[second].m);
 	pthread_mutex_unlock(&pi->fork[first].m);
 	return ;
 }
 
-static void	*routine(philo_info_t *pi, long first, long second, int completed)
+static void	*routine(t_philo_info *pi, long first, long second, int completed)
 {
 	while (1)
 	{
@@ -88,13 +88,13 @@ static void	*routine(philo_info_t *pi, long first, long second, int completed)
 
 void	*setting_table(void *args)
 {
-	philo_info_t	*pi;
+	t_philo_info	*pi;
 	long			first;
 	long			second;
 	long			temp;
 	int				completed;
 
-	pi = (philo_info_t *)args;
+	pi = (t_philo_info *)args;
 	first = pi->thread_id;
 	if (pi->thread_id + 1 != pi->n_forks)
 		second = (pi->thread_id + 1) % pi->n_forks;

@@ -6,7 +6,7 @@
 /*   By: antabord <antabord@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 12:21:20 by antabord          #+#    #+#             */
-/*   Updated: 2025/11/25 21:44:13 by antabord         ###   ########.fr       */
+/*   Updated: 2025/11/27 18:34:47 by antabord         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ long	current_miliseconsds(void)
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-void	printf_msg(philo_info_t *pi, long timestamp, const char *msg)
+void	printf_msg(t_philo_info *pi, long timestamp, const char *msg)
 {
 	int	alive;
 
@@ -34,7 +34,7 @@ void	printf_msg(philo_info_t *pi, long timestamp, const char *msg)
 	pthread_mutex_unlock(pi->print_mutex);
 }
 
-int	funeral(philo_info_t *pi)
+int	funeral(t_philo_info *pi)
 {
 	int	i;
 
@@ -53,13 +53,13 @@ int	funeral(philo_info_t *pi)
 
 void	*life_check(void *arg)
 {
-	monitor_t	*mon;
+	t_monitor	*mon;
 	int			i;
 	int			k;
 
 	i = 0;
 	k = 0;
-	mon = (monitor_t *)arg;
+	mon = (t_monitor *)arg;
 	while (1)
 	{
 		if (i == mon->n_forks)
@@ -78,12 +78,12 @@ void	*life_check(void *arg)
 	return (NULL);
 }
 
-monitor_t	*monitor_starter(philo_info_t *ti, fork_tracker_t *mutex,
+t_monitor	*monitor_starter(t_philo_info *ti, t_fork_tracker *mutex,
 		char *argv[], long n_forks)
 {
-	monitor_t	*monitor;
+	t_monitor	*monitor;
 
-	monitor = malloc(sizeof(monitor_t));
+	monitor = malloc(sizeof(t_monitor));
 	if (!monitor)
 		return (NULL);
 	monitor->pi = ti;

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   structs.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: antabord <antabord@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/27 18:10:27 by antabord          #+#    #+#             */
+/*   Updated: 2025/11/27 18:30:20 by antabord         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef STRUCTS_H
 # define STRUCTS_H
 
@@ -14,9 +26,9 @@
 # define HUNGRY 0 // alive
 # define FULL 1   // dead
 
-typedef struct s_forks		fork_tracker_t;
-typedef struct s_monitor	monitor_t;
-typedef struct s_philo_info	philo_info_t;
+typedef struct s_forks		t_fork_tracker;
+typedef struct s_monitor	t_monitor;
+typedef struct s_philo_info	t_philo_info;
 
 struct						s_forks
 {
@@ -28,7 +40,7 @@ struct						s_forks
 struct						s_monitor
 {
 	pthread_t				monitor;
-	philo_info_t			*pi;
+	t_philo_info			*pi;
 	pthread_mutex_t			print_mutex;
 	pthread_mutex_t			time_mutex;
 	pthread_mutex_t			state_mutex;
@@ -42,8 +54,8 @@ struct						s_monitor
 struct						s_philo_info
 {
 	pthread_t				th;
-	monitor_t				*monitor;
-	fork_tracker_t			*fork;
+	t_monitor				*monitor;
+	t_fork_tracker			*fork;
 	pthread_mutex_t			*print_mutex;
 	pthread_mutex_t			*time_mutex;
 	pthread_mutex_t			*state_mutex;
