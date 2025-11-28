@@ -6,7 +6,7 @@
 /*   By: antabord <antabord@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 21:43:37 by antabord          #+#    #+#             */
-/*   Updated: 2025/11/27 18:16:58 by antabord         ###   ########.fr       */
+/*   Updated: 2025/11/28 16:04:38 by antabord         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	meal_check(t_monitor *mon, int i)
 	long	time_since_last_meal;
 
 	pthread_mutex_lock(&mon->last_meal_monitor);
-	time_since_last_meal = current_miliseconsds() - mon->pi[i].last_meal_ms;
+	time_since_last_meal = current_miliseconds() - mon->pi[i].last_meal_ms;
 	pthread_mutex_unlock(&mon->last_meal_monitor);
 	if (time_since_last_meal > mon->pi[i].time_to_die)
 	{
@@ -25,8 +25,9 @@ void	meal_check(t_monitor *mon, int i)
 		mon->life_status = DEAD;
 		pthread_mutex_unlock(&mon->state_mutex);
 		pthread_mutex_lock(&mon->print_mutex);
-		printf("%ld philo %d has died\n", current_miliseconsds(),
-			mon->pi[i].thread_id);
+		if (mon->meal_status != FULL)
+			printf("%ld philo %d has died\n", current_miliseconds(),
+				mon->pi[i].thread_id);
 		pthread_mutex_unlock(&mon->print_mutex);
 	}
 	pthread_mutex_lock(&mon->last_meal_monitor);

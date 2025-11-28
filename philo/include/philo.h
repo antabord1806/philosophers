@@ -6,7 +6,7 @@
 /*   By: antabord <antabord@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/27 18:10:19 by antabord          #+#    #+#             */
-/*   Updated: 2025/11/27 18:32:32 by antabord         ###   ########.fr       */
+/*   Updated: 2025/11/28 16:02:54 by antabord         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 int			funeral(t_philo_info *pi);
 void		*life_check(void *arg);
 void		printf_msg(t_philo_info *pi, long timestamp, const char *msg);
-long		current_miliseconsds(void);
+long		current_miliseconds(void);
 t_monitor	*monitor_starter(t_philo_info *ti, t_fork_tracker *mutex,
 				char *argv[], long n_forks);
 t_monitor	*struct_filler(t_philo_info *ti, t_fork_tracker *mutex,

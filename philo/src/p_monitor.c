@@ -6,18 +6,21 @@
 /*   By: antabord <antabord@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 12:21:20 by antabord          #+#    #+#             */
-/*   Updated: 2025/11/27 18:34:47 by antabord         ###   ########.fr       */
+/*   Updated: 2025/11/28 16:09:08 by antabord         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-long	current_miliseconsds(void)
+long	current_miliseconds(void)
 {
 	struct timeval	tv;
+	static long		time;
 
 	gettimeofday(&tv, NULL);
-	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+	if (!time)
+		time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000) - time);
 }
 
 void	printf_msg(t_philo_info *pi, long timestamp, const char *msg)
