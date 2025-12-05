@@ -6,7 +6,7 @@
 /*   By: antabord <antabord@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/27 18:10:19 by antabord          #+#    #+#             */
-/*   Updated: 2025/11/28 16:02:54 by antabord         ###   ########.fr       */
+/*   Updated: 2025/12/05 16:53:06 by antabord         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ t_monitor	*struct_filler(t_philo_info *ti, t_fork_tracker *mutex,
 				t_monitor *monitor, char *argv[]);
 long		ft_atol(char *str);
 void		*setting_table(void *args);
-void		meal_check(t_monitor *mon, int i);
+void		meal_check(t_philo_info *pi);
 void		single_philo(t_philo_info *pi, t_fork_tracker *mutex,
 				long death_time, bool ola);
 

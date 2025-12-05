@@ -6,37 +6,38 @@
 /*   By: antabord <antabord@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 21:43:37 by antabord          #+#    #+#             */
-/*   Updated: 2025/11/28 16:04:38 by antabord         ###   ########.fr       */
+/*   Updated: 2025/12/05 18:08:03 by antabord         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-void	meal_check(t_monitor *mon, int i)
+void	meal_check(t_philo_info *pi)
 {
-	long	time_since_last_meal;
+    long	now;
+    long	death_ms;
 
-	pthread_mutex_lock(&mon->last_meal_monitor);
-	time_since_last_meal = current_miliseconds() - mon->pi[i].last_meal_ms;
-	pthread_mutex_unlock(&mon->last_meal_monitor);
-	if (time_since_last_meal > mon->pi[i].time_to_die)
-	{
-		pthread_mutex_lock(&mon->state_mutex);
-		mon->life_status = DEAD;
-		pthread_mutex_unlock(&mon->state_mutex);
-		pthread_mutex_lock(&mon->print_mutex);
-		if (mon->meal_status != FULL)
-			printf("%ld philo %d has died\n", current_miliseconds(),
-				mon->pi[i].thread_id);
-		pthread_mutex_unlock(&mon->print_mutex);
-	}
-	pthread_mutex_lock(&mon->last_meal_monitor);
-	if (mon->pi[i].amount_of_meals == mon->pi[i].current_meal)
-	{
-		pthread_mutex_lock(&mon->state_mutex);
-		mon->meal_status = FULL;
-		pthread_mutex_unlock(&mon->state_mutex);
-	}
-	pthread_mutex_unlock(&mon->last_meal_monitor);
-	return ;
+    pthread_mutex_lock(pi->last_meal_monitor);
+    now = current_miliseconds();
+    death_ms = pi->last_meal_ms + pi->time_to_die;
+    pthread_mutex_unlock(pi->last_meal_monitor);
+    if (now >= death_ms)
+    {
+        pthread_mutex_lock(pi->state_mutex);
+        if (pi->monitor->life_status == ALIVE)
+        {
+            pi->monitor->life_status = DEAD;
+            pthread_mutex_unlock(pi->state_mutex);
+            pthread_mutex_lock(pi->print_mutex);
+            printf("%ld philo %d has died\n", death_ms, pi->thread_id);
+            pthread_mutex_unlock(pi->print_mutex);
+        }
+        else
+            pthread_mutex_unlock(pi->state_mutex);
+        return ;
+    }
+    pthread_mutex_lock(pi->state_mutex);
+    if (pi->amount_of_meals >= 0 && pi->current_meal >= pi->amount_of_meals)
+        pi->monitor->meal_status = FULL;
+    pthread_mutex_unlock(pi->state_mutex);
 }

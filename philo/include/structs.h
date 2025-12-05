@@ -6,7 +6,7 @@
 /*   By: antabord <antabord@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/27 18:10:27 by antabord          #+#    #+#             */
-/*   Updated: 2025/11/28 15:20:51 by antabord         ###   ########.fr       */
+/*   Updated: 2025/12/05 15:54:45 by antabord         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ struct						s_monitor
 struct						s_philo_info
 {
 	pthread_t				th;
+	pthread_t				monitor_th;
 	t_monitor				*monitor;
 	t_fork_tracker			*fork;
 	pthread_mutex_t			*print_mutex;

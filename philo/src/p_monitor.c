@@ -6,7 +6,7 @@
 /*   By: antabord <antabord@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 12:21:20 by antabord          #+#    #+#             */
-/*   Updated: 2025/11/28 16:09:08 by antabord         ###   ########.fr       */
+/*   Updated: 2025/12/05 17:30:17 by antabord         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,10 @@ int	funeral(t_philo_info *pi)
 
 	i = -1;
 	while (++i < pi->n_forks)
+	{
 		pthread_join(pi[i].th, NULL);
-	pthread_join(pi->monitor->monitor, NULL);
+        pthread_join(pi[i].monitor_th, NULL);
+	}
 	i = -1;
 	while (++i < pi->n_forks)
 		pthread_mutex_destroy(&pi->fork[i].m);
@@ -67,7 +69,7 @@ void	*life_check(void *arg)
 	{
 		if (i == mon->n_forks)
 			i = 0;
-		meal_check(mon, i);
+		meal_check(mon->pi);
 		pthread_mutex_lock(&mon->state_mutex);
 		if (mon->life_status == DEAD || mon->meal_status == FULL)
 		{
@@ -76,7 +78,6 @@ void	*life_check(void *arg)
 		}
 		pthread_mutex_unlock(&mon->state_mutex);
 		i = (i + 1) % mon->n_forks;
-		usleep(1000);
 	}
 	return (NULL);
 }

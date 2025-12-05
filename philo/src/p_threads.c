@@ -6,11 +6,33 @@
 /*   By: antabord <antabord@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 12:22:18 by antabord          #+#    #+#             */
-/*   Updated: 2025/12/05 14:55:42 by antabord         ###   ########.fr       */
+/*   Updated: 2025/12/05 17:55:36 by antabord         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
+
+
+static void	*philo_guard(void *arg)
+{
+    t_philo_info	*pi;
+
+    pi = arg;
+    while (1)
+    {
+        meal_check(pi);
+        pthread_mutex_lock(pi->state_mutex);
+        if (pi->monitor->life_status == DEAD
+            || pi->monitor->meal_status == FULL)
+        {
+            pthread_mutex_unlock(pi->state_mutex);
+            break ;
+        }
+        pthread_mutex_unlock(pi->state_mutex);
+        usleep(1000);
+    }
+    return (NULL);
+}
 
 int	philo_creator(t_philo_info *ti)
 {
@@ -24,6 +46,8 @@ int	philo_creator(t_philo_info *ti)
 	{
 		if (ti->thread_id % 2 == 0)
 			usleep(1000);
+		if (pthread_create(&ti[i].monitor_th, NULL, philo_guard, &ti[i]) != 0)
+    		printf("ERROR monitor\n");
 		if (pthread_create(&ti[i].th, NULL, setting_table, &ti[i]) != 0)
 			printf("ERROR grabbing fork\n");
 	}
@@ -108,9 +132,6 @@ int	main(int argc, char *argv[])
 	if (!monitor_starter(ti, mutex, argv, ft_atol(argv[1])))
 		return (free(mutex), free(ti), 0);
 	philo_creator(ti);
-	if (pthread_create(&ti->monitor->monitor, NULL, life_check,
-			ti->monitor) != 0)
-		return (printf("failed to create monitor thread\n"), 0);
 	funeral(ti);
 	return (free(mutex), free(ti), 0);
 }
