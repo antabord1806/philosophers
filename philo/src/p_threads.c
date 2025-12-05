@@ -6,7 +6,7 @@
 /*   By: antabord <antabord@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 12:22:18 by antabord          #+#    #+#             */
-/*   Updated: 2025/11/28 16:11:26 by antabord         ###   ########.fr       */
+/*   Updated: 2025/12/05 14:55:42 by antabord         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	philo_creator(t_philo_info *ti)
 	while (++i < ti->n_forks)
 	{
 		if (ti->thread_id % 2 == 0)
-			usleep(100);
+			usleep(1000);
 		if (pthread_create(&ti[i].th, NULL, setting_table, &ti[i]) != 0)
 			printf("ERROR grabbing fork\n");
 	}
@@ -95,7 +95,8 @@ int	main(int argc, char *argv[])
 
 	if (argc > 6 || argc < 5)
 		return (0);
-	if (!ft_atol(argv[1]))
+	if (!ft_atol(argv[1]) || !ft_atol(argv[2]) || !ft_atol(argv[3])
+		|| !ft_atol(argv[4]))
 		return (0);
 	mutex = malloc(ft_atol(argv[1]) * sizeof(t_fork_tracker));
 	ti = malloc(ft_atol(argv[1]) * sizeof(t_philo_info));
