@@ -20,19 +20,14 @@ philosophers/
 ├── README.md
 └── philo/
     ├── Makefile
-    ├── philo                (binário compilado ou executável)
     ├── include/
     │   ├── philo.h
     │   └── structs.h
     └── src/
-        ├── p_meal_check.c
-        ├── p_meal_check.o
+        ├── p_meal_check.c			## monitor thread
         ├── p_monitor.c
-        ├── p_monitor.o
-        ├── p_routine.c
-        ├── p_routine.o
-        ├── p_single_philo.c
-        ├── p_single_philo.o
+        ├── p_routine.c				## main loop execution
+        ├── p_single_philo.c		## exeption
         ├── p_threads.c
         └── p_threads.o
 </pre>
