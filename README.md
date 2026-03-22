@@ -13,19 +13,30 @@
 <h2>Project Overview</h2>
 <p>This project is a concurrency simulation based on the classic Dining Philosophers problem. The goal is to learn how to handle resourse sharing between threads, using <a href="#mutexes"><strong>mutexes</strong></a> to avoid <a href="#race-condition"><strong>race-conditions</strong></a>, <a href="#deadlock"><strong>deadlock</strong></a> or <a href="#starvation"><strong>starvation</strong></a> which are just simptoms of missmanaged resources.</p>
 
-## Running the Project
+<h2>Running the project</h2>
 
-Follow these steps to compile and run the Philosophers project. This assumes you are in the project directory.
-
----
-
-### 1. Compilation
-
-Use the following command to compile the project:
+Follow these steps to compile project.
 
 ```bash
-make
+git clone git@github.com:antabord1806/philosophers.git philosophers
+cd philosophers
+make re
 ```
+Now run it.
+
+```bash
+./philo number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]
+```
+
+<ul>
+    <li><strong style="background-color: #fff3b0; padding: 2px 4px; border-radius: 3px;">number_of_philosophers</strong>: Total number of philosophers participating in the simulation. Determines how many threads are created.</li>
+    <li><strong style="background-color: #fff3b0; padding: 2px 4px; border-radius: 3px;">time_to_die</strong>: Time in milliseconds a philosopher can go without eating before dying. If a philosopher doesn’t grab a fork in this time, they die.</li>
+    <li><strong style="background-color: #fff3b0; padding: 2px 4px; border-radius: 3px;">time_to_eat</strong>: Time in milliseconds a philosopher spends eating. During this time, they hold the forks they grabbed.</li>
+    <li><strong style="background-color: #fff3b0; padding: 2px 4px; border-radius: 3px;">time_to_sleep</strong>: Time in milliseconds a philosopher spends sleeping after eating. They release the forks during this period.</li>
+    <li><strong style="background-color: #fff3b0; padding: 2px 4px; border-radius: 3px;">number_of_times_each_philosopher_must_eat</strong> (optional): The simulation stops after each philosopher has eaten this many times. If omitted, the simulation continues until a philosopher dies.</li>
+</ul>
+
+<h2>Key Concepts</h2>
 <ul>
     <li><h3 id="race-condition">Race Condition</h3></li>
         <p>When two or more threads try to access th same data, and beacause it was not sicronized, their beahvior is unpredictable, undefined behaviour. In this application when several philosophers thry to grab the same fork, depending on the one that grabs it first, the remaining might wait it out, sleep, or die, and there is no way to know what happens</p>
@@ -36,7 +47,7 @@ make
     <li><h3 id="mutexes">Mutexes</h3></li>
         <p>In the mandatory part of the project mutexes present themselves as the solution for the problems listed above, they are a synchronization tool used to protect shared resources so that only one thread can access them at a time. The moment a philosopher takes a fork, all the others are forced to wait (think) for it to drop it, therefore they are not always trynig to grab the forks at once</p>
 </ul>
-	
+		
 		pthread_mutex_lock(&mutex);		#mutex locked by only one philo;
 		shared_data = updated_value;	#data between locking and unlocking mutex is protected;
 		pthread_mutex_unlock(&mutex);	#ulocking mutex;
