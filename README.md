@@ -22,6 +22,15 @@
         <p>When some threads are never getting acess to the data they need, while others are just cycling it amongst eachother. In this context a philosopher never gets to grab a fork while the others do</p>
     <li><h3>Mutexes</h3></li>
         <p>In the mandatory part of the project mutexes present themselves as the solution for the problems listed above, they are a synchronization tool used to protect shared resources so that only one thread can access them at a time. The moment a philosopher takes a fork, all the others are forced to wait (think) for it to drop it, therefore they are not always trynig to grab the forks at once</p>
+        ```sh
+minishell> echo "Hello World!"
+Hello World!
+minishell> cd srcs/parsing | ls | grep cmd
+cmd_utils.c
+cmd_utils2.c
+cmdparsing.c
+minishell>
+```
 </ul>
 
 
