@@ -20,7 +20,7 @@ To compile and execute the Philosophers project, follow these steps:
 ### Compilation
 Use the `make` command to compile the project:
 
-```bash
+	```bash
 make
 
 <ul>
@@ -33,10 +33,9 @@ make
     <li><h3 id="mutexes">Mutexes</h3></li>
         <p>In the mandatory part of the project mutexes present themselves as the solution for the problems listed above, they are a synchronization tool used to protect shared resources so that only one thread can access them at a time. The moment a philosopher takes a fork, all the others are forced to wait (think) for it to drop it, therefore they are not always trynig to grab the forks at once</p>
 </ul>
-	<pre><code>
+	
 		pthread_mutex_lock(&mutex);		#mutex locked by only one philo;
 		shared_data = updated_value;	#data between locking and unlocking mutex is protected;
 		pthread_mutex_unlock(&mutex);	#ulocking mutex;
-	</code></pre>
 
 
