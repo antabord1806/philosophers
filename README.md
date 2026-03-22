@@ -24,10 +24,10 @@
         <p>In the mandatory part of the project mutexes present themselves as the solution for the problems listed above, they are a synchronization tool used to protect shared resources so that only one thread can access them at a time. The moment a philosopher takes a fork, all the others are forced to wait (think) for it to drop it, therefore they are not always trynig to grab the forks at once</p>
 
 </ul>
-	```sh
+	<pre><code>
 	pthread_mutex_unlock(pi->time_mutex);
 	printf_msg(pi, timetstamp, "has taken a fork");
     pthread_mutex_lock(&pi->fork[second].m);
-	```
+	</code></pre>
 
 
