@@ -71,4 +71,34 @@ Now run it.
 		shared_data = updated_value;	#data between locking and unlocking mutex is protected;
 		pthread_mutex_unlock(&mutex);	#ulocking mutex;
 
-<
+<h2>Exemplos de Testes</h2>
+<ul>
+  <li>
+    <b>5 filósofos, execução padrão:</b>
+    <br>
+    <code>./philo 5 800 200 200</code>
+    <br>
+    Esperado: Todos sobrevivem indefinidamente.
+  </li>
+  <li>
+    <b>Apenas 1 filósofo:</b>
+    <br>
+    <code>./philo 1 800 200 200</code>
+    <br>
+    Esperado: Ele morre após <code>time_to_die</code> ms.
+  </li>
+  <li>
+    <b>Limite de refeições:</b>
+    <br>
+    <code>./philo 3 800 200 200 3</code>
+    <br>
+    Esperado: Todos comem 3 vezes, nenhuma morte, o programa termina sozinho.
+  </li>
+  <li>
+    <b>Entrada inválida:</b>
+    <br>
+    <code>./philo</code>
+    <br>
+    Esperado: Mensagem de erro clara.
+  </li>
+</ul>
