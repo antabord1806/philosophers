@@ -13,7 +13,16 @@
 <h2>Project Overview</h2>
 <p>This project is a concurrency simulation based on the classic Dining Philosophers problem. The goal is to learn how to handle resourse sharing between threads, using <a href="#mutexes"><strong>mutexes</strong></a> to avoid <a href="#race-condition"><strong>race-conditions</strong></a>, <a href="#deadlock"><strong>deadlock</strong></a> or <a href="#starvation"><strong>starvation</strong></a> which are just simptoms of missmanaged resources.</p>
 
-<h2>Running the project</h2>
+<h3>Estrutura do projeto</h3>
+
+<ul>
+  <li><b>src</b> – arquivo principal, loop e gerenciamento de threads</li>
+  <li><b>includes</b> – definições de structs e protótipos</li>
+	  <li>ola<b></b> – funções auxiliares</li>
+  <li><b>Makefile</b> – compilação fácil do projeto</li>
+</ul>
+
+<h3>Running the project</h3>
 
 Follow these steps to compile project.
 
@@ -52,4 +61,4 @@ Now run it.
 		shared_data = updated_value;	#data between locking and unlocking mutex is protected;
 		pthread_mutex_unlock(&mutex);	#ulocking mutex;
 
-
+<
