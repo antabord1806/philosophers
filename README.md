@@ -102,3 +102,6 @@ Now run it.
     Expected: Clear error message.
   </li>
 </ul>
+
+<h2>Changelog</h2>
+<p>See <a href="CHANGELOG.md">CHANGELOG.md</a> for a full history of notable changes.</p>
