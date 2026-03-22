@@ -11,4 +11,8 @@
 </p>
 
 <h2 align="center">Project Overview</h2>
-<p>This project is a concurrency simulation based on the classic Dining Philosophers problem. The goal is to learn how to handle resourse sharing between threads, using mutexes, and avoid race-conditions, deadlock or starvation which are just simptoms of missmanaged resources.</p>
+<p>This project is a concurrency simulation based on the classic Dining Philosophers problem. The goal is to learn how to handle resourse sharing between threads, using mutexes to avoid race-conditions, deadlock or starvation which are just simptoms of missmanaged resources.</p>
+
+<h3>Race Conditions</h3>
+<p></p>
+
