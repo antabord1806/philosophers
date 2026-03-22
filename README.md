@@ -13,16 +13,19 @@
 <h2>Project Overview</h2>
 <p>This project is a concurrency simulation based on the classic Dining Philosophers problem. The goal is to learn how to handle resourse sharing between threads, using <a href="#mutexes"><strong>mutexes</strong></a> to avoid <a href="#race-condition"><strong>race-conditions</strong></a>, <a href="#deadlock"><strong>deadlock</strong></a> or <a href="#starvation"><strong>starvation</strong></a> which are just simptoms of missmanaged resources.</p>
 
-## How to Run the Project
+## Running the Project
 
-To compile and execute the Philosophers project, follow these steps:
+Follow these steps to compile and run the Philosophers project. This assumes you are in the project directory.
 
-### Compilation
-Use the `make` command to compile the project:
+---
 
-	```bash
+### 1. Compilation
+
+Use the following command to compile the project:
+
+```bash
 make
-
+```
 <ul>
     <li><h3 id="race-condition">Race Condition</h3></li>
         <p>When two or more threads try to access th same data, and beacause it was not sicronized, their beahvior is unpredictable, undefined behaviour. In this application when several philosophers thry to grab the same fork, depending on the one that grabs it first, the remaining might wait it out, sleep, or die, and there is no way to know what happens</p>
