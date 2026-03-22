@@ -10,7 +10,7 @@
   <img src="https://img.shields.io/badge/Unix-System-orange?style=for-the-badge&logo=linux"/>
 </p>
 
-<h2 align="center">Project Overview</h2>
+<h2>Project Overview</h2>
 <p>This project is a concurrency simulation based on the classic Dining Philosophers problem. The goal is to learn how to handle resourse sharing between threads, using mutexes to avoid race-conditions, deadlock or starvation which are just simptoms of missmanaged resources.</p>
 
 <h3>Race Conditions</h3>
