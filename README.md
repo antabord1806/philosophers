@@ -1,6 +1,6 @@
 <h1 align="center">Philosophers</h1>
 
-<p style="text-align: center;">
+<p align="center">
     <em>This project has been created as part of the 42 curriculum by antabord.</em>
 </p>
 
