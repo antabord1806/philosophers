@@ -1,6 +1,6 @@
 <h1 align="center">Philosophers</h1>
 
-<h4 align="center" style="italic">This project has been created as part of the 42 curriculum by antabord.</h4>
+<i align="center">This project has been created as part of the 42 curriculum by antabord.</i>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Language-C-blue?style=for-the-badge&logo=c"/>
