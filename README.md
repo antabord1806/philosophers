@@ -15,12 +15,27 @@
 
 <h3>Estrutura do projeto</h3>
 
-<ul>
-  <li><b>src</b> – arquivo principal, loop e gerenciamento de threads</li>
-  <li><b>includes</b> – definições de structs e protótipos</li>
-	  <li>ola<b></b> – funções auxiliares</li>
-  <li><b>Makefile</b> – compilação fácil do projeto</li>
-</ul>
+<pre>
+philosophers/
+├── README.md
+└── philo/
+    ├── Makefile
+    ├── philo                (binário compilado ou executável)
+    ├── include/
+    │   ├── philo.h
+    │   └── structs.h
+    └── src/
+        ├── p_meal_check.c
+        ├── p_meal_check.o
+        ├── p_monitor.c
+        ├── p_monitor.o
+        ├── p_routine.c
+        ├── p_routine.o
+        ├── p_single_philo.c
+        ├── p_single_philo.o
+        ├── p_threads.c
+        └── p_threads.o
+</pre>
 
 <h3>Running the project</h3>
 
