@@ -29,11 +29,11 @@ Now run it.
 ```
 
 <ul>
-    <li><strong style="background-color: #fff3b0; padding: 2px 4px; border-radius: 3px;">number_of_philosophers</strong>: Total number of philosophers participating in the simulation. Determines how many threads are created.</li>
-    <li><strong style="background-color: #fff3b0; padding: 2px 4px; border-radius: 3px;">time_to_die</strong>: Time in milliseconds a philosopher can go without eating before dying. If a philosopher doesn’t grab a fork in this time, they die.</li>
-    <li><strong style="background-color: #fff3b0; padding: 2px 4px; border-radius: 3px;">time_to_eat</strong>: Time in milliseconds a philosopher spends eating. During this time, they hold the forks they grabbed.</li>
-    <li><strong style="background-color: #fff3b0; padding: 2px 4px; border-radius: 3px;">time_to_sleep</strong>: Time in milliseconds a philosopher spends sleeping after eating. They release the forks during this period.</li>
-    <li><strong style="background-color: #fff3b0; padding: 2px 4px; border-radius: 3px;">number_of_times_each_philosopher_must_eat</strong> (optional): The simulation stops after each philosopher has eaten this many times. If omitted, the simulation continues until a philosopher dies.</li>
+    <li><strong>number_of_philosophers</strong>--> Total number of philosophers participating in the simulation. Determines how many threads are created.</li>
+    <li><strong>time_to_die</strong>--> Time in milliseconds a philosopher can go without eating before dying. If a philosopher doesn’t grab a fork in this time, they die.</li>
+    <li><strong>time_to_eat</strong>--> Time in milliseconds a philosopher spends eating. During this time, they hold the forks they grabbed.</li>
+    <li><strong>time_to_sleep</strong>--> Time in milliseconds a philosopher spends sleeping after eating. They release the forks during this period.</li>
+    <li><strong>number_of_times_each_philosopher_must_eat</strong> (optional)--> The simulation stops after each philosopher has eaten this many times. If omitted, the simulation continues until a philosopher dies.</li>
 </ul>
 
 <h2>Key Concepts</h2>
